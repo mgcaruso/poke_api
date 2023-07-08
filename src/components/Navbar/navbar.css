@@ -1,0 +1,35 @@
+.nav_container {
+    height: 3rem;
+    background-color: black;
+    color: white;
+}
+.nav_container,.nav_container ul{
+    display: flex;
+}
+
+.nav_container ul{
+    padding-inline: .5rem;
+    height: 100%;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.nav_container ul li{
+    list-style: none;
+    margin-inline: .5rem ;
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+}
+
+.link:visited,
+.link:active {
+    color: white;
+}
+
+.link:hover{
+    text-decoration: underline;
+}
