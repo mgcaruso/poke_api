@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import PokeCard from '../PokeCard/PokeCard';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Spinner from 'react-bootstrap/Spinner';
 import Select from 'react-select'
 import './index.css'
 
@@ -12,6 +13,7 @@ const Index = () => {
     const [filtered, setFiltered] = useState(null);
     const [input, setInput] = useState("");
     const [typeSelected, setTypeSelected] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const getPokemons = async () => {
         try {
@@ -22,12 +24,15 @@ const Index = () => {
                 const data = res.json();
                 return data;
             });
-            await Promise.all(promises).then(res => setPokes(res)).catch(err => err.message);
-
+            await Promise.all(promises).then(res => {
+                setPokes(res)
+                setLoading(false);
+            }).catch(err => err.message);
         } catch (err) {
             console.log(err)
         }
     }
+    console.log(loading);
 
     //Function declarations :
     const getImageType = (type) => {
@@ -80,6 +85,7 @@ const Index = () => {
         return mapped;
     }
     let options = generateUniqueOptionTypes(pokes);
+
     options = [{ value: "", label: "Select...", icon: "" }, ...options];
 
     const filterPokes = (inputValue, type) => {
@@ -105,7 +111,7 @@ const Index = () => {
             }
         }
 
-        if (inputValue && !type) { //if input has value
+        if (inputValue && !type) {
             setFiltered(filteredInput);
         } else if (!inputValue && type) {
             setFiltered(filterTypes);
@@ -113,6 +119,7 @@ const Index = () => {
             setFiltered(arrP);
         } else { //if neither has value
             setFiltered(pokes);
+            console.log("neither");
         }
 
     }
@@ -145,8 +152,7 @@ const Index = () => {
 
     }, [pokes, input, typeSelected])
 
-    console.log(pokes)
-
+    console.log
     // console.log(filtered);
     return (
         <main className="main min-vh-100 min-vh-100">
@@ -162,24 +168,28 @@ const Index = () => {
                 <Select
                     getOptionLabel={e => (
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <img style={{height: "25px"}} src={e.icon} alt={e.value} />
-                            <span style={{ marginLeft: 15 }}>{[e.label.split("")[0].toUpperCase(),...e.label.slice(1)].join("")}</span>
+                            <img style={{ height: "25px" }} src={e.icon} alt={e.value} />
+                            <span style={{ marginLeft: 15 }}>{[e.label.split("")[0].toUpperCase(), ...e.label.slice(1)].join("")}</span>
                         </div>
                     )}
                     defaultValue={options[0]}
                     onChange={(e) => setTypeSelected(e.value)} className="w-50" options={options} />
             </Form>
             <section className='d-flex justify-content-evenly flex-wrap p-4 gap-3'>
-
-                {filtered?.length > 0 ?
-                    filtered?.map((item, i) =>
-                        <PokeCard key={i} poke={item} getImageType={getImageType} />
+                {loading ? (
+                    <Spinner animation="border" variant="light" />
+                ) : (
+                    filtered && filtered.length > 0 ? (
+                        filtered.map((item, i) => (
+                            <PokeCard key={i} poke={item} getImageType={getImageType} />
+                        ))
+                    ) : (
+                        <section>
+                            <h4>No results found</h4>
+                        </section>
                     )
-                    :
-                    <section>
-                        <h4>No results found</h4>
-                    </section>
-                }
+                )}
+
             </section>
         </main>
     )
