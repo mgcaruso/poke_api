@@ -80,7 +80,7 @@ const Index = () => {
         return mapped;
     }
     let options = generateUniqueOptionTypes(pokes);
-    options = [{ value: "", label: "Clear filter", icon: "" }, ...options];
+    options = [{ value: "", label: "Select...", icon: "" }, ...options];
 
     const filterPokes = (inputValue, type) => {
         let filterTypes = pokes.filter(item => {
@@ -166,13 +166,20 @@ const Index = () => {
                             <span style={{ marginLeft: 15 }}>{[e.label.split("")[0].toUpperCase(),...e.label.slice(1)].join("")}</span>
                         </div>
                     )}
+                    defaultValue={options[0]}
                     onChange={(e) => setTypeSelected(e.value)} className="w-50" options={options} />
             </Form>
             <section className='d-flex justify-content-evenly flex-wrap p-4 gap-3'>
 
-                {filtered?.map((item, i) =>
-                    <PokeCard key={i} poke={item} getImageType={getImageType} />
-                )}
+                {filtered.length > 0 ?
+                    filtered?.map((item, i) =>
+                        <PokeCard key={i} poke={item} getImageType={getImageType} />
+                    )
+                    :
+                    <section>
+                        <h4>No results found</h4>
+                    </section>
+                }
             </section>
         </main>
     )
