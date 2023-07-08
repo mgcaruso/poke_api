@@ -171,7 +171,7 @@ const Index = () => {
             </Form>
             <section className='d-flex justify-content-evenly flex-wrap p-4 gap-3'>
 
-                {filtered.length > 0 ?
+                {filtered?.length > 0 ?
                     filtered?.map((item, i) =>
                         <PokeCard key={i} poke={item} getImageType={getImageType} />
                     )
